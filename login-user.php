@@ -22,14 +22,15 @@ if(!isset($obj->{'email'})){
     $check_email_password = $db->table('users')
     ->where('user_email','=',$useremail)
     ->where("user_password","=",$userpassword)
-    ->get();
+    ->select('id,user_name, user_email,is_user_admin')
+    ->get()->first();
     
     // check count of found results
     if($db->getCount()>0){
-             print "{\"status\":1,\"message\":\"Welcome !\"}" ;
+             print "{\"status\":1,\"message\":\"Welcome !\",\"user\":$check_email_password}" ;
 
     }else{
-            print "{\"status\":0,\"message\":\"Error in Email or Password\"}" ;
+            print "{\"status\":0,\"message\":\"Error in Email or Password\",\"user\":null}" ;
     }
 }
 
