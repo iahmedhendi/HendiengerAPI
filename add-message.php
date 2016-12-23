@@ -40,6 +40,40 @@ if(!isset($obj->{'room_id'})){
     }else{
             print "{\"status\":0,\"message\":\"Error While Adding Message !\"}" ;
     }
+
+$date = date("Y-m-d h:i:s");
+        $url = 'https://fcm.googleapis.com/fcm/send';
+    $fcmdata =  "{
+       \"to\": \"/topics/room12\",
+       \"data\": {
+       \"message\": \"".$content."\",
+       \"room_id\":\"".$room_id."\",
+       \"user_id\":\"".$user_id."\",
+       \"username\":\"".$user_name."\",
+       \"type\":\"".$type."\",
+       \"timestamp\":\"".$date."\"
+   }
+}";
+    //************   rplace this with your api key ***************// 
+    define("GOOGLE_API_KEY", "AIzaSyDgP1YfW1KzqJtyQmPeDSKAnYVNKbXvMuU");
+    $headers = array(
+        'Authorization: key=' . GOOGLE_API_KEY,
+        'Content-Type: application/json'
+    );
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fcmdata);
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+    }
+    curl_close($ch);
+    echo $result;
 }
 
 
